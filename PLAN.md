@@ -107,7 +107,7 @@ Ràng buộc chống double-booking ở 2 tầng: optimistic lock trên `Seat.ro
 - Booking Service: events/seats seed, đặt vé, **optimistic locking ROWVERSION** → 409.
 - Lời gọi Booking→Auth bọc `cockatiel` (timeout/retry/breaker/fallback).
 - `pino` logging + metrics endpoint in-memory.
-- Báo cáo: mục Kiến trúc (Ch.17/18) + mục Concurrency & Resilience (Ch.14/17).
+- Báo cáo: mục Kiến trúc (Ch.17/18) + mục Concurrency & Resilience (Ch.14/17) + mục Giới thiệu (1) + mục Kết luận (9).
 
 **Làm chung (tuần cuối)**
 - Docker Compose, GitHub Actions CI (5 bước).
