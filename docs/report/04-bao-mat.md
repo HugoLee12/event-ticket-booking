@@ -57,4 +57,4 @@
 | **I**nformation Disclosure | Token JWT bị bắt trộm trên đường truyền không được bảo vệ. | Toàn bộ đường truyền mạng | Khuyến nghị cấu hình HTTPS ở production; thiết lập thời gian hết hạn JWT ngắn (24 giờ). |
 | **D**enial of Service | Hacker gửi hàng loạt request login liên tục làm cạn kiệt tài nguyên. | CPU/RAM của Auth Service | `express-rate-limit` chặn IP spam request vượt ngưỡng quy định trước khi xử lý nghiệp vụ. |
 | **D**enial of Service | Tranh chấp đặt vé gây ra khóa chết (deadlock) hoặc nghẽn DB. | Database, Booking Service | Sử dụng optimistic locking qua `ROWVERSION` của SQL Server giúp giải phóng kết nối cực nhanh. |
-| **E**levation of Privilege | Người dùng thường cố tình gọi API thống kê metrics của Admin. | Endpoint GET `/api/v1/metrics` | Middleware requireAdmin xác thực vai trò `admin` được trích xuất từ JWT payload. |
+| **E**levation of Privilege | Người dùng thường cố tình gọi API thống kê metrics của Admin. | Endpoint GET `/api/v1/metrics` | Sau `requireAuth`, handler `/metrics` (trong `metrics.ts`) kiểm tra trực tiếp `role === 'admin'` từ JWT payload, trả `403` nếu không phải admin. |
