@@ -26,7 +26,9 @@ Hệ thống đặt vé sự kiện gồm 2 service minh hoạ 4 chương Sommer
 
 - Đã xong: tài liệu (spec, plan, glossary, ADR) + **bootstrap tối thiểu**: skeleton services/auth (port 3001) + services/booking (port 3002) với `GET /health`, contracts tại `shared/contracts/` (JWT payload, `/users/me` response), docker-compose (mssql + 2 service), tsconfig.base.json, `.env.example`.
 - Đã verify: `npm run build` + `/health` trả 200 cả 2 service, và `docker compose up --build` chạy đủ 3 container (mssql healthy, auth/booking trả 200 qua Docker).
-- Việc kế: chia việc song song theo `PLAN.md` mục 7 (A: Auth Service, B: Booking Service).
+- Phân công đã chốt: **B (Booking Service) - Hugo**, **A (Auth Service) - đồng đội**; cả hai đều dùng AI hỗ trợ.
+- Kế hoạch GĐ1-B đã duyệt: pool `mssql` từ env + bootstrap schema idempotent khi service khởi động (tạo DB `tickets` nếu chưa có, tạo bảng Event/Seat (`row_version ROWVERSION`)/Booking (`seat_id UNIQUE`) + seed), middleware verify JWT cục bộ (`jsonwebtoken` + contract `JwtPayload`), `GET /api/v1/events`, tách app.ts/index.ts, test Jest + Supertest tại seam HTTP với SQL Server thật.
+- **Quy ước schema cho cả 2 người**: mỗi service tự tạo bảng của mình trong cùng DB `tickets` theo kiểu idempotent lúc khởi động (`IF OBJECT_ID(...) IS NULL CREATE TABLE ...`); A áp dụng pattern này cho bảng `User`.
 
 ## Nguyên tắc làm việc
 
@@ -44,6 +46,7 @@ Dự án có 2 file cùng nội dung:
 
 ## Quy tắc đọc
 
+- File `.pdf` KHÔNG được commit (đã ignore để repo nhẹ khi clone); mỗi máy tự chép 2 file PDF (sách + đề bài) vào root repo nếu cần xem hình.
 - Đọc nội dung chính từ file `.md`.
 - Khi gặp đoạn đánh dấu `==> picture [...] intentionally omitted <==` kèm khối `----- Start of picture text -----`, đó là text OCR trích thô từ trong hình (nhãn, box), **không phải mô tả ảnh**. Text này bị mất bố cục và mũi tên, nên với sơ đồ luồng/kiến trúc sẽ hiểu sai quan hệ giữa các thành phần.
 - Khi cần xem hình (sơ đồ, biểu đồ, ảnh minh họa), mở đúng trang tương ứng trong file `.pdf` để xem trực quan thay vì dựa vào text OCR trong `.md`.
