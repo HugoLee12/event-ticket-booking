@@ -27,8 +27,10 @@ Hệ thống đặt vé sự kiện gồm 2 service minh hoạ 4 chương Sommer
 - Đã xong: tài liệu (spec, plan, glossary, ADR) + **bootstrap tối thiểu**: skeleton services/auth (port 3001) + services/booking (port 3002) với `GET /health`, contracts tại `shared/contracts/` (JWT payload, `/users/me` response), docker-compose (mssql + 2 service), tsconfig.base.json, `.env.example`.
 - Đã verify: `npm run build` + `/health` trả 200 cả 2 service, và `docker compose up --build` chạy đủ 3 container (mssql healthy, auth/booking trả 200 qua Docker).
 - Phân công đã chốt: **B (Booking Service) - Hugo**, **A (Auth Service) - đồng đội**; cả hai đều dùng AI hỗ trợ.
-- Kế hoạch GĐ1-B đã duyệt: pool `mssql` từ env + bootstrap schema idempotent khi service khởi động (tạo DB `tickets` nếu chưa có, tạo bảng Event/Seat (`row_version ROWVERSION`)/Booking (`seat_id UNIQUE`) + seed), middleware verify JWT cục bộ (`jsonwebtoken` + contract `JwtPayload`), `GET /api/v1/events`, tách app.ts/index.ts, test Jest + Supertest tại seam HTTP với SQL Server thật.
-- **Quy ước schema cho cả 2 người**: mỗi service tự tạo bảng của mình trong cùng DB `tickets` theo kiểu idempotent lúc khởi động (`IF OBJECT_ID(...) IS NULL CREATE TABLE ...`); A áp dụng pattern này cho bảng `User`.
+- **GĐ1-B đã xong và verify qua Docker**: booking có db.ts (pool `mssql`), init.ts (bootstrap schema idempotent: DB `tickets`, bảng Event/Seat (`row_version ROWVERSION`)/Booking (`seat_id UNIQUE`) + seed 2 event x 10 ghế), auth.ts (verify JWT cục bộ theo contract `JwtPayload`), `GET /api/v1/events`, app.ts/index.ts tách riêng, 3 test Jest + Supertest pass với SQL Server thật (`npm test` trong services/booking, cần mssql compose đang chạy; env đọc từ `.env` root qua `--env-file-if-exists`).
+- **Quy ước schema cho cả 2 người**: mỗi service tự tạo bảng của mình trong cùng DB `tickets` theo kiểu idempotent lúc khởi động (`IF OBJECT_ID(...) IS NULL CREATE TABLE ...`) - xem mẫu `services/booking/src/init.ts`; A áp dụng pattern này cho bảng `User`. Booking.user_id cố ý KHÔNG có FK sang `User` (tránh phụ thuộc thứ tự boot giữa 2 service).
+- **Toolchain**: TypeScript pin `^5` (KHÔNG lên v7 - ts-jest chưa hỗ trợ); test dùng Jest + ts-jest + Supertest, cấu hình xem services/booking/package.json.
+- Việc kế: A làm Auth GĐ1 (bảng User, register/login/JWT, test API); B tiếp GĐ2 (POST /bookings + optimistic locking ROWVERSION, cockatiel gọi /users/me, pino + metrics).
 
 ## Nguyên tắc làm việc
 
