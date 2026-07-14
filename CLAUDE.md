@@ -36,6 +36,11 @@ Hệ thống đặt vé sự kiện gồm 2 service minh hoạ 4 chương Sommer
 - **GĐ1-A đã xong và verify qua Docker**: Đã hoàn thành bộ khung Auth Service gồm bảng `User` (idempotent), API `register` (mã hóa mật khẩu bcrypt), `login` (phát hành JWT token), `/users/me` (middleware requireAuth). Đã có 7 test case kiểm thử tích hợp tự động qua Supertest cho Auth Service pass hoàn toàn với SQL Server.
 - **GĐ2-A đã xong và verify qua Docker**: Đã hoàn tất các tính năng bảo mật nâng cao và phân quyền cho Auth Service bao gồm: tích hợp `helmet`, cấu hình `express-rate-limit` chống brute-force cho login, kiểm duyệt đầu vào bằng `zod`, hỗ trợ phân quyền vai trò `admin`/`user` trong DB và đóng gói vai trò vào JWT.
 - Việc kế: Thực hiện GĐ3 (gộp nhánh `feat/auth` vào `main` và viết Happy Path integration test liên kết giữa 2 service 'đăng ký -> đăng nhập -> lấy JWT -> events -> đặt vé' để xác minh luồng tích hợp Booking gọi Auth thành công), chạy thử nghiệm Docker Compose end-to-end local và chuẩn bị báo cáo đồ án (GĐ4).
+- **[Note từ B cho A - cần sửa trước khi merge]**: `services/auth/tsconfig.json` thiếu dòng `"exclude": ["src/**/*.test.ts"]` (booking có, auth bị sót khi copy).
+  Hậu quả: `npm run build` biên dịch cả `auth.test.ts` vào `dist/` nên Docker image production dính file test, và jest chạy trùng cả bản `.ts` lẫn `.js` đã compile khiến 7 test bị đếm gấp đôi thành 14 (con số ảo).
+  Fix: thêm đúng dòng `exclude` đó vào `services/auth/tsconfig.json` giống hệt `services/booking/tsconfig.json`, build lại rồi `npm test -w services/auth` phải ra 7 test.
+  B đã review branch `feat/auth`: build sạch, contract JWT + `/users/me` khớp đúng với Booking (path `/api/v1/auth/users/me`, `UsersMeResponse {displayName,email}`) nên Booking không phải sửa gì.
+  Sau khi fix `exclude` thì A làm tiếp GĐ3-A (merge + happy path E2E) như dòng "Việc kế" ở trên; lưu ý happy path E2E cần rebuild image auth từ branch này (container auth trong Docker đang là bản `main` cũ chưa có register/login).
 
 ## Quy ước làm việc chung repo (2 người + AI)
 
