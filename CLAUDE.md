@@ -24,8 +24,9 @@ Hệ thống đặt vé sự kiện gồm 2 service minh hoạ 4 chương Sommer
 
 ## Trạng thái & việc kế tiếp
 
-- Đã xong: toàn bộ tài liệu (spec, plan, glossary, ADR) đã commit. Chưa có code.
-- Việc kế: dựng **bootstrap tối thiểu** (repo skeleton services/auth + services/booking, docker-compose + SQL Server, 2 file interface contract: JWT payload và `/users/me` response), rồi mới chia việc song song theo `PLAN.md` mục 7.
+- Đã xong: tài liệu (spec, plan, glossary, ADR) + **bootstrap tối thiểu**: skeleton services/auth (port 3001) + services/booking (port 3002) với `GET /health`, contracts tại `shared/contracts/` (JWT payload, `/users/me` response), docker-compose (mssql + 2 service), tsconfig.base.json, `.env.example`.
+- Đã verify: `npm run build` + `/health` trả 200 cả 2 service (chạy local bằng Node). **Chưa verify `docker compose up`** vì máy chưa cài Docker Desktop/WSL - cần cài rồi chạy `docker compose up --build`.
+- Việc kế: chia việc song song theo `PLAN.md` mục 7 (A: Auth Service, B: Booking Service).
 
 ## Nguyên tắc làm việc
 
