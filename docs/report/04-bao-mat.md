@@ -1,11 +1,3 @@
-# ĐỀ CƯƠNG BÁO CÁO GIAI ĐOẠN 4 - PHẦN A (AUTH SERVICE & BẢO MẬT)
-
-Tài liệu này chứa bản nháp thô chi tiết cho phần báo cáo của thành viên A (Auth Service & Bảo mật).
-Các nội dung này được thiết kế để copy trực tiếp sang file báo cáo Word (.docx) của nhóm.
-Mỗi câu hoặc gạch đầu dòng được viết trên một dòng riêng biệt để tránh xung đột khi git merge.
-
----
-
 ## 4. Bảo mật (Security Engineering - Sommerville Ch.13)
 
 ### 4.1. Tổng quan thiết kế bảo mật hệ thống
