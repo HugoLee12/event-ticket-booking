@@ -53,6 +53,14 @@ test('POST /api/v1/bookings không có token -> 401', async () => {
   await request(app).post('/api/v1/bookings').send({ seatId: 1 }).expect(401);
 });
 
+test('POST /api/v1/bookings token sai -> 401', async () => {
+  await request(app)
+    .post('/api/v1/bookings')
+    .set('Authorization', 'Bearer token-rac')
+    .send({ seatId: 1 })
+    .expect(401);
+});
+
 test('POST /api/v1/bookings body sai -> 400', async () => {
   await request(app)
     .post('/api/v1/bookings')

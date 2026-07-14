@@ -6,7 +6,12 @@
     "services/*"
   ],
   "scripts": {
+    "lint": "eslint services shared",
     "build": "npm run build --workspaces",
     "test": "npm test --workspaces --if-present"
+  },
+  "devDependencies": {
+    "eslint": "^10.7.0",
+    "typescript-eslint": "^8.64.0"
   }
 }
