@@ -45,7 +45,7 @@ export function requireAuth(req: Request, res: Response, next: NextFunction): vo
     const payload = jwt.verify(token, process.env.JWT_SECRET as string) as JwtPayload;
     res.locals.user = payload;
     next();
-  } catch (err) {
+  } catch {
     res.status(401).json({ error: 'Token không hợp lệ' });
   }
 }
