@@ -16,7 +16,6 @@ const registerSchema = z.object({
   email: z.string().email('Email không hợp lệ'),
   password: z.string().min(6, 'Mật khẩu phải có ít nhất 6 ký tự'),
   displayName: z.string().min(1, 'Tên hiển thị không được để trống').optional(),
-  role: z.enum(['user', 'admin']).optional(),
 });
 
 const loginSchema = z.object({
@@ -58,7 +57,7 @@ authRouter.post('/register', async (req: Request, res: Response): Promise<void> 
     return;
   }
 
-  const { email, password, displayName, role = 'user' } = parsed.data;
+  const { email, password, displayName } = parsed.data;
   const derivedDisplayName = displayName || email.split('@')[0];
 
   try {
@@ -85,7 +84,7 @@ authRouter.post('/register', async (req: Request, res: Response): Promise<void> 
       .input('email', sql.NVarChar(256), email)
       .input('passwordHash', sql.VarChar(255), passwordHash)
       .input('displayName', sql.NVarChar(256), derivedDisplayName)
-      .input('role', sql.VarChar(10), role)
+      .input('role', sql.VarChar(10), 'user')
       .query(`
         INSERT INTO dbo.[User] (email, password_hash, display_name, role)
         OUTPUT INSERTED.id, INSERTED.email, INSERTED.display_name, INSERTED.role

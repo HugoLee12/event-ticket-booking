@@ -41,6 +41,25 @@ describe('Auth Service integration tests', () => {
     });
   });
 
+  test('POST /api/v1/auth/register - gửi role admin bị bỏ qua, vẫn là user (chống leo thang đặc quyền)', async () => {
+    const escalationEmail = 'auth-test-escalation@example.com';
+    const pool = await getPool();
+    await pool.request().input('email', escalationEmail).query('DELETE FROM dbo.[User] WHERE email = @email');
+
+    const res = await request(app)
+      .post('/api/v1/auth/register')
+      .send({
+        email: escalationEmail,
+        password: testPassword,
+        role: 'admin',
+      })
+      .expect(201);
+
+    expect(res.body.role).toBe('user');
+
+    await pool.request().input('email', escalationEmail).query('DELETE FROM dbo.[User] WHERE email = @email');
+  });
+
   test('POST /api/v1/auth/register - email trùng -> 409', async () => {
     const res = await request(app)
       .post('/api/v1/auth/register')
