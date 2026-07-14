@@ -6,7 +6,7 @@
     "dev": "tsx watch --env-file-if-exists=../../.env src/index.ts",
     "build": "tsc",
     "start": "node dist/services/booking/src/index.js",
-    "test": "node --env-file-if-exists=../../.env node_modules/jest/bin/jest.js --runInBand"
+    "test": "node --env-file-if-exists=../../.env ../../node_modules/jest/bin/jest.js --runInBand"
   },
   "jest": {
     "preset": "ts-jest",

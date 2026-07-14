@@ -1,0 +1,12 @@
+{
+  "name": "event-ticket-booking",
+  "version": "0.1.0",
+  "private": true,
+  "workspaces": [
+    "services/*"
+  ],
+  "scripts": {
+    "build": "npm run build --workspaces",
+    "test": "npm test --workspaces --if-present"
+  }
+}
