@@ -1,0 +1,9 @@
+# Giữ build context nhỏ: bỏ sách/tài liệu nặng và output local
+node_modules
+**/node_modules
+**/dist
+.git
+.env
+*.md
+*.pdf
+docs/
