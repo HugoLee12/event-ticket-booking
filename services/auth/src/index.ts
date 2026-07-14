@@ -1,21 +1,13 @@
-import { app } from './app';
-import { initDb } from './init';
-import { logger } from './logger';
+import express from 'express';
 
-if (!process.env.JWT_SECRET) {
-  logger.error({}, 'Thiếu biến môi trường JWT_SECRET');
-  process.exit(1);
-}
+const app = express();
+app.use(express.json());
+
+app.get('/health', (_req, res) => {
+  res.json({ status: 'ok', service: 'auth' });
+});
 
 const port = Number(process.env.PORT) || 3001;
-
-initDb()
-  .then(() => {
-    app.listen(port, () => {
-      logger.info({ port }, 'auth service đã khởi động');
-    });
-  })
-  .catch((err) => {
-    logger.error({ err }, 'khởi tạo DB thất bại');
-    process.exit(1);
-  });
+app.listen(port, () => {
+  console.log(`auth service listening on port ${port}`);
+});
