@@ -32,6 +32,16 @@ Hệ thống đặt vé sự kiện gồm 2 service minh hoạ 4 chương Sommer
 - **Toolchain**: TypeScript pin `^5` (KHÔNG lên v7 - ts-jest chưa hỗ trợ); test dùng Jest + ts-jest + Supertest, cấu hình xem services/booking/package.json.
 - Việc kế: A làm Auth GĐ1 (bảng User, register/login/JWT, test API); B tiếp GĐ2 (POST /bookings + optimistic locking ROWVERSION, cockatiel gọi /users/me, pino + metrics).
 
+## Quy ước làm việc chung repo (2 người + AI)
+
+- Mỗi người làm trong thư mục service của mình (`services/auth` = A, `services/booking` = B); muốn sửa file chung (`shared/contracts/`, `docker-compose.yml`, `tsconfig.base.json`, `.env.example`, spec/PLAN) thì báo người kia trước.
+- Luôn `git pull --rebase` trước khi push.
+- Trong CLAUDE.md mục "Trạng thái & việc kế", mỗi người chỉ sửa dòng nói về phần của mình.
+- `docs/adr/`: mỗi ADR một file đánh số tăng dần; thêm ADR mới thì nhắn người kia để lấy số kế tiếp.
+- `docs/report/` (GĐ4): tách mỗi mục báo cáo một file riêng theo phân công trong PLAN.md mục 7, tuần cuối mới ghép.
+- File Markdown dài: viết mỗi câu trọn vẹn trên một dòng riêng (git merge theo dòng nên 2 người sửa 2 câu khác nhau sẽ không conflict).
+- `.gitignore` đang chặn `*.pdf` toàn cục; cuối kỳ nếu cần commit PDF báo cáo thì đổi rule thành 2 tên file cụ thể (sách + đề bài).
+
 ## Nguyên tắc làm việc
 
 - Ưu tiên đơn giản - chắc chắn - chạy được; scope đã cắt cho khả thi 2.5 tuần, không tự phình thêm.
