@@ -1,8 +1,9 @@
 import { app } from './app';
 import { initDb } from './init';
+import { logger } from './logger';
 
 if (!process.env.JWT_SECRET) {
-  console.error('Thiếu biến môi trường JWT_SECRET');
+  logger.error('Thiếu biến môi trường JWT_SECRET');
   process.exit(1);
 }
 
@@ -11,10 +12,10 @@ const port = Number(process.env.PORT) || 3002;
 initDb()
   .then(() => {
     app.listen(port, () => {
-      console.log(`booking service listening on port ${port}`);
+      logger.info({ port }, 'booking service đã khởi động');
     });
   })
   .catch((err) => {
-    console.error('Khởi tạo DB thất bại', err);
+    logger.error({ err }, 'khởi tạo DB thất bại');
     process.exit(1);
   });
