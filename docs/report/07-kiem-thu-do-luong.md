@@ -1,7 +1,7 @@
 # 7. Kiểm thử và Kết quả đo lường
 
 Mục này trình bày chiến lược kiểm thử của Booking Service và số liệu vận hành đo được từ hệ thống đang chạy.
-Phần đo lường neo vào khả năng quan sát (observability) như một điều kiện của tính bền vững (dependability, Ch.14): một hệ thống chỉ đáng tin khi vận hành của nó đo được và ghi lại được.
+Phần đo lường neo vào khả năng quan sát (observability) như một điều kiện của tính bền vững (dependability, Chương 14): một hệ thống chỉ đáng tin khi vận hành của nó đo được và ghi lại được.
 Toàn bộ con số trong mục là số đo thật, bắt trực tiếp từ Booking Service chạy qua Docker trên SQL Server thật và bộ test tự động, không phải số minh hoạ.
 
 ## 7.1. Chiến lược kiểm thử: seam ở biên HTTP REST
@@ -39,7 +39,7 @@ Kết quả đo thật:
 
 ## 7.3. Đo lường vận hành: metrics endpoint
 
-Ngoài test, hệ thống mang sẵn một kênh đo lường lúc chạy, đúng tinh thần observability của Ch.14.
+Ngoài test, hệ thống mang sẵn một kênh đo lường lúc chạy, đúng tinh thần observability của Chương 14.
 `GET /api/v1/metrics` trả về các bộ đếm vận hành, và chỉ **admin** mới được xem (role `user` nhận `403`, đúng phân quyền ở mục Bảo mật).
 Số đo thật bắt được (admin, `200`):
 

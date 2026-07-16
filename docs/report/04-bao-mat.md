@@ -1,4 +1,4 @@
-# 4. Bảo mật (Security Engineering - Sommerville Ch.13)
+# 4. Bảo mật (Security Engineering - Sommerville Chương 13)
 
 ## 4.1. Tổng quan thiết kế bảo mật hệ thống
 
