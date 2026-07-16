@@ -28,3 +28,18 @@ Chúng tôi tin rằng sự cố của một thành phần phụ trợ không đ
 Cuối cùng, hệ thống duy trì cơ chế ghi nhận log kiểm toán (audit logs) đầy đủ và có cấu trúc thông qua `pino`.
 Mọi hành động đặt vé thành công hay thất bại do tranh chấp đều được ghi nhận kèm mã định danh và mốc thời gian chính xác.
 Nhật ký vận hành này chính là bằng chứng kỹ thuật trung thực để đối soát và giải quyết các khiếu nại của khách hàng một cách công bằng nhất nếu có tranh chấp xảy ra.
+
+## 8.3. Trách nhiệm nghề nghiệp khi dùng AI hỗ trợ phát triển (AI-assisted Development)
+
+Một thực tế cụ thể của chính đồ án này là cả hai thành viên đều sử dụng công cụ AI để hỗ trợ viết code, và chúng tôi cho rằng chính điều đó đặt ra một câu hỏi đạo đức nghề nghiệp cần được nói thẳng.
+Mục 2.2 của Bộ quy tắc đạo đức ACM (ACM Code of Ethics) yêu cầu người kỹ sư "chỉ nhận và thực hiện công việc trong phạm vi năng lực của mình" và phải chịu trách nhiệm về chất lượng sản phẩm mình bàn giao.
+Nguyên tắc này không hề được nới lỏng khi một phần code do AI sinh ra: công cụ chỉ là phương tiện, còn trách nhiệm cuối cùng về tính đúng đắn, an toàn và hệ quả của phần mềm vẫn hoàn toàn thuộc về người phát triển ký tên vào commit.
+Chúng tôi ý thức rằng code do AI tạo ra có thể trông hợp lý nhưng vẫn chứa lỗi tinh vi, sai giả định về nghiệp vụ, hoặc lỗ hổng bảo mật, nên tuyệt đối không được tin tưởng một cách mù quáng.
+
+Vì vậy, quy trình làm việc của nhóm coi mọi đề xuất từ AI là một bản nháp cần được kiểm chứng, chứ không phải một đáp án để chép thẳng.
+Mỗi thành viên phải thật sự hiểu đoạn code trước khi đưa vào nhánh chung, đủ để giải thích được vì sao nó đúng và bảo trì nó về sau khi không còn công cụ hỗ trợ.
+Bộ integration test chạy trên SQL Server thật (mục 7) đóng vai trò tấm lưới an toàn khách quan: nó kiểm chứng hành vi thực tế của code bất kể code đó do người hay AI viết ra, đặc biệt ở bất biến chống double-booking nơi một lỗi nhỏ sẽ gây thiệt hại thật.
+Một minh chứng cụ thể cho tinh thần này là trong quá trình rà chéo, nhóm đã tự phát hiện và vá một lỗ hổng leo thang đặc quyền (API đăng ký từng nhận trường `role` từ client, cho phép tự phong `admin`) - cho thấy việc con người rà soát lại và không phó thác hoàn toàn cho công cụ là điều kiện bắt buộc.
+
+Chúng tôi cũng chủ trương minh bạch về việc sử dụng AI thay vì che giấu, coi đó là một phần của tính trung thực học thuật và nghề nghiệp (ACM Mục 1.3: Be Honest and Trustworthy).
+Nói ngắn gọn, AI giúp nhóm đi nhanh hơn, nhưng nó không san sẻ trách nhiệm: người kỹ sư vẫn là người duy nhất đứng ra bảo đảm cho sản phẩm cuối cùng.
