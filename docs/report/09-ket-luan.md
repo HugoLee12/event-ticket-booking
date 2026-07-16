@@ -11,7 +11,7 @@ Lớp bảo mật (JWT, phân quyền, bcrypt, zod, rate-limit, helmet, paramete
 ## 9.2. Bài học
 
 **Về kỹ thuật.**
-Bài học lớn nhất là chọn đúng công cụ nhất quán cho đúng loại dữ liệu: dữ liệu quyết định ai sở hữu ghế phải giữ nhất quán mạnh qua khoá lạc quan trên một cơ sở dữ liệu, còn dữ liệu hiển thị phụ như tên người dùng thì chấp nhận nhất quán lỏng và có thể tạm thiếu.
+Bài học lớn nhất là chọn đúng công cụ nhất quán cho đúng loại dữ liệu: dữ liệu quyết định ai sở hữu ghế phải giữ nhất quán mạnh qua optimistic locking trên một cơ sở dữ liệu, còn dữ liệu hiển thị phụ như tên người dùng thì chấp nhận nhất quán lỏng và có thể tạm thiếu.
 Việc phân loại đúng đâu là dữ liệu cốt lõi và đâu là dữ liệu phụ chính là quyết định cho phép hệ thống vừa đúng đắn vừa bền bỉ.
 Một bài học kèm theo là đôi khi tái sử dụng ít lại tốt hơn: chúng tôi cố ý dùng driver `mssql` thô thay vì ORM, vì một tầng trừu tượng cao hơn sẽ che mất chính `ROWVERSION` là cơ chế lõi của bài toán.
 

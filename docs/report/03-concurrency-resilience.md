@@ -48,7 +48,7 @@ Kết quả đo thật:
 
 - Đúng **1 request trả `201`** (người thắng), **19 request trả `409`** (người thua).
 - Truy vấn `SELECT COUNT(*) FROM Booking WHERE seat_id = @id` trả về **đúng 1**: không có double-booking.
-- Toàn bộ 13 test của Booking Service pass trong **4.919 giây** (`npm test --runInBand`), chạy trên SQL Server thật trong Docker.
+- Toàn bộ 13 test của Booking Service pass trong **4.919 giây** (`npm test -w services/booking`), chạy trên SQL Server thật trong Docker.
 
 Đây là bằng chứng thực nghiệm cho tính đúng đắn của optimistic concurrency control dưới tải tranh chấp, chứ không phải suy luận trên giấy.
 Sơ đồ tuần tự của kịch bản này ở mục 3.7.
@@ -63,7 +63,7 @@ Lời gọi được bọc bằng thư viện `cockatiel` với bốn lớp phò
 
 - **Timeout** 1.5 giây: cắt lời gọi treo, không để Booking Service chờ vô hạn khi Auth chậm.
 - **Retry** tối đa 2 lần: hấp thụ lỗi thoáng qua (transient fault) như một cú mạng chập chờn.
-- **Circuit breaker**: khi tỉ lệ lỗi vượt ngưỡng, breaker **mở** và các lời gọi tiếp theo bị chặn ngay lập tức mà không thử gọi mạng, tránh dồn thêm tải lên một service đang sập; sau một khoảng nghỉ, breaker chuyển sang trạng thái thử (half-open) để dò xem Auth đã hồi phục chưa.
+- **Circuit breaker**: khi lỗi xảy ra 5 lần liên tiếp (`ConsecutiveBreaker`), breaker **mở** và các lời gọi tiếp theo bị chặn ngay lập tức mà không thử gọi mạng, tránh dồn thêm tải lên một service đang sập; sau một khoảng nghỉ, breaker chuyển sang trạng thái thử (half-open) để dò xem Auth đã hồi phục chưa.
 - **Fallback**: khi mọi lớp trên đều thất bại, hàm trả về `user: null` thay vì ném lỗi.
 
 Bốn lớp này là hiện thực cụ thể của các chiến lược resilience mà Sommerville nêu trong Ch.14: phát hiện lỗi (timeout), phục hồi lỗi (retry), và cô lập lỗi để tránh lan truyền (circuit breaker).
@@ -114,6 +114,6 @@ sequenceDiagram
     B-->>C1: 201 {bookingId, seatId, user}
     B->>DB: UPDATE Seat ... WHERE row_version=? (đã cũ)
     DB-->>B: 0 dòng bị ảnh hưởng (thua)
-    B-->>Cn: 409 Conflict {"error":"Ghế đã có người đặt"}
+    B-->>Cn: 409 Conflict {"error":"Ghế vừa bị người khác đặt, hãy thử lại"}
     Note over DB: COUNT(Booking WHERE seat_id)=1 -> 0 double-booking
 ```

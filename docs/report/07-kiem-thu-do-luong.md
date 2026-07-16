@@ -34,8 +34,8 @@ Riêng ca E2E khởi động một Auth Service thật ở cổng 3999 và trỏ
 
 Kết quả đo thật:
 
-- **13/13 test pass**, thời gian chạy **4.919 giây** (`npm test -w services/booking --runInBand`) trên SQL Server thật trong Docker.
-- Chạy tuần tự (`--runInBand`) là cố ý: các test chia sẻ một cơ sở dữ liệu nên chạy song song sẽ giẫm chân nhau; mỗi test tự dọn dữ liệu của mình (tạo event/seat riêng, xoá ở `afterAll`) để không rò rỉ trạng thái sang ca khác.
+- **13/13 test pass**, thời gian chạy **4.919 giây** (`npm test -w services/booking`) trên SQL Server thật trong Docker.
+- Chạy tuần tự (flag `--runInBand` gắn sẵn trong script test) là cố ý: các test chia sẻ một cơ sở dữ liệu nên chạy song song sẽ giẫm chân nhau; mỗi test tự dọn dữ liệu của mình (tạo event/seat riêng, xoá ở `afterAll`) để không rò rỉ trạng thái sang ca khác.
 
 ## 7.3. Đo lường vận hành: metrics endpoint
 

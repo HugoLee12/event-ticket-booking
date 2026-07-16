@@ -65,15 +65,15 @@ Toàn hệ chạy bằng Docker Compose, có CI/CD trên GitHub Actions, có log
 | POST | /api/v1/auth/login | - | 200 + JWT / 401 sai thông tin / 429 quá nhiều lần thử |
 | GET | /api/v1/auth/users/me | JWT | 200 hồ sơ / 401 |
 | GET | /api/v1/events | JWT | 200 danh sách sự kiện + ghế / 401 |
-| POST | /api/v1/bookings | JWT | 201 đặt thành công / 409 tranh chấp / 400 input sai / 401 |
+| POST | /api/v1/bookings | JWT | 201 đặt thành công / 409 tranh chấp / 404 ghế không tồn tại / 400 input sai / 401 |
 | GET | /api/v1/metrics | JWT admin | 200 số liệu / 401 / 403 nếu không phải admin |
 
 ### Schema (phác thảo)
 
-- **User**(id, email UNIQUE, password_hash, role['user'|'admin'], created_at)
+- **User**(id, email UNIQUE, password_hash, display_name, role['user'|'admin'], created_at)
 - **Event**(id, name, starts_at) - seed sẵn
 - **Seat**(id, event_id FK, label, status['free'|'booked'], row_version ROWVERSION)
-- **Booking**(id, seat_id FK UNIQUE, user_id FK, created_at)
+- **Booking**(id, seat_id FK UNIQUE, user_id, created_at) - `user_id` cố ý không có FK sang `User` để tránh phụ thuộc thứ tự boot giữa hai service (xem `services/booking/src/init.ts`)
 
 ## Testing Decisions
 

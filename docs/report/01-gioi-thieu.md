@@ -2,7 +2,8 @@
 
 ## 1.1. Bài toán
 
-Báo cáo này trình bày thiết kế và hiện thực một hệ thống đặt vé sự kiện (Event Ticket Booking) như một ví dụ chạy được cho bốn chương của Sommerville: Kỹ nghệ bảo mật (Ch.13), Kỹ nghệ chịu lỗi (Ch.14), Kỹ nghệ phần mềm phân tán (Ch.17) và Kỹ nghệ phần mềm hướng dịch vụ (Ch.18).
+Báo cáo này trình bày thiết kế và hiện thực một hệ thống đặt vé sự kiện (Event Ticket Booking) như một ví dụ chạy được cho các chương của Sommerville, với bốn chương trọng tâm: Kỹ nghệ bảo mật (Ch.13), Kỹ nghệ chịu lỗi (Ch.14), Kỹ nghệ phần mềm phân tán (Ch.17) và Kỹ nghệ phần mềm hướng dịch vụ (Ch.18).
+Ngoài bốn chương trọng tâm, báo cáo còn neo thêm các chương về tái sử dụng và đánh đổi (Ch.15, Ch.16) ở mục 5 và CI/CD (Ch.25) ở mục 6.
 Đặt vé là một miền nghiệp vụ quen thuộc nhưng chứa đúng một bài toán khó điển hình: khi một sự kiện gần hết chỗ, nhiều khách có thể cùng nhắm vào một ghế cuối tại cùng một thời điểm.
 Nếu hệ thống xử lý sai, cùng một ghế bị bán cho hai người, gây thiệt hại tài chính, mất niềm tin và có thể phát sinh trách nhiệm pháp lý.
 
