@@ -9,6 +9,10 @@ export async function initDb(): Promise<void> {
     await master
       .request()
       .query(`IF DB_ID('${dbConfig.database}') IS NULL CREATE DATABASE [${dbConfig.database}]`);
+  } catch (err) {
+    // 1801 = DB đã tồn tại: 2 service cùng boot trên volume sạch có thể cùng qua check DB_ID
+    // rồi cùng CREATE - bên thua coi như mục tiêu đã đạt, không được chết.
+    if ((err as { number?: number }).number !== 1801) throw err;
   } finally {
     await master.close();
   }

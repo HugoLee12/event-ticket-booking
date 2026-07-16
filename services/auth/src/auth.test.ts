@@ -84,6 +84,40 @@ describe('Auth Service integration tests', () => {
     expect(res.body.error).toBe('Input sai');
   });
 
+  test('POST /api/v1/auth/register - 2 request cùng email đồng thời -> 1 thắng 201, 1 thua 409 (không 500)', async () => {
+    const raceEmail = 'auth-test-race@example.com';
+    const pool = await getPool();
+    await pool.request().input('email', raceEmail).query('DELETE FROM dbo.[User] WHERE email = @email');
+
+    // Cả 2 request đều vượt qua bước check trùng email (check-then-insert không atomic);
+    // UNIQUE trên [User].email chặn bên thua, phải trả 409 chứ không phải 500.
+    const responses = await Promise.all([
+      request(app).post('/api/v1/auth/register').send({ email: raceEmail, password: testPassword }),
+      request(app).post('/api/v1/auth/register').send({ email: raceEmail, password: testPassword }),
+    ]);
+
+    const statuses = responses.map((r) => r.status).sort();
+    expect(statuses).toEqual([201, 409]);
+
+    const count = await pool
+      .request()
+      .input('email', raceEmail)
+      .query('SELECT COUNT(*) AS n FROM dbo.[User] WHERE email = @email');
+    expect(count.recordset[0].n).toBe(1);
+
+    await pool.request().input('email', raceEmail).query('DELETE FROM dbo.[User] WHERE email = @email');
+  });
+
+  test('POST /api/v1/auth/register - body JSON hỏng cú pháp -> 400', async () => {
+    const res = await request(app)
+      .post('/api/v1/auth/register')
+      .set('Content-Type', 'application/json')
+      .send('{"email":')
+      .expect(400);
+
+    expect(res.body.error).toBe('Input sai');
+  });
+
   test('POST /api/v1/auth/login - sai mật khẩu -> 401', async () => {
     const res = await request(app)
       .post('/api/v1/auth/login')

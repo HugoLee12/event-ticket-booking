@@ -27,6 +27,7 @@ const loginSchema = z.object({
 const loginLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 phút
   limit: 10, // Tối đa 10 lần đăng nhập sai từ 1 IP trong windowMs
+  skipSuccessfulRequests: true, // Đăng nhập thành công không tính vào giới hạn (chỉ chống brute-force)
   message: { error: 'Quá nhiều lần thử đăng nhập, vui lòng thử lại sau 15 phút' },
   standardHeaders: true,
   legacyHeaders: false,
@@ -41,7 +42,9 @@ export function requireAuth(req: Request, res: Response, next: NextFunction): vo
     return;
   }
   try {
-    const payload = jwt.verify(token, process.env.JWT_SECRET as string) as JwtPayload;
+    const payload = jwt.verify(token, process.env.JWT_SECRET as string, {
+      algorithms: ['HS256'],
+    }) as JwtPayload;
     res.locals.user = payload;
     next();
   } catch {
@@ -101,6 +104,13 @@ authRouter.post('/register', async (req: Request, res: Response): Promise<void> 
       role: newUser.role,
     });
   } catch (err) {
+    // 2627/2601 = vi phạm UNIQUE trên [User].email: 2 request đăng ký cùng email gần đồng thời
+    // đều vượt qua bước check trùng phía trên (check-then-insert không atomic) - bên thua nhận 409.
+    const sqlErrorNumber = (err as { number?: number }).number;
+    if (sqlErrorNumber === 2627 || sqlErrorNumber === 2601) {
+      res.status(409).json({ error: 'Email đã tồn tại' });
+      return;
+    }
     logger.error({ err }, 'Lỗi hệ thống khi đăng ký');
     res.status(500).json({ error: 'Lỗi hệ thống' });
   }
