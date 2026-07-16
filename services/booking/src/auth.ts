@@ -12,7 +12,9 @@ export function requireAuth(req: Request, res: Response, next: NextFunction): vo
     return;
   }
   try {
-    res.locals.user = jwt.verify(token, process.env.JWT_SECRET as string) as JwtPayload;
+    res.locals.user = jwt.verify(token, process.env.JWT_SECRET as string, {
+      algorithms: ['HS256'],
+    }) as JwtPayload;
     next();
   } catch {
     res.status(401).json({ error: 'Token không hợp lệ' });

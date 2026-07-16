@@ -7,7 +7,8 @@ import { getPool } from './db';
 import { logger } from './logger';
 import { counters } from './metrics';
 
-const bodySchema = z.object({ seatId: z.number().int().positive() });
+// max = giới hạn sql.Int (2^31-1): vượt qua sẽ nổ ở tầng driver thành 500 thay vì 400.
+const bodySchema = z.object({ seatId: z.number().int().positive().max(2147483647) });
 
 export const bookingsRouter = Router();
 

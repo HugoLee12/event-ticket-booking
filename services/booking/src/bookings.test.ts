@@ -69,6 +69,28 @@ test('POST /api/v1/bookings body sai -> 400', async () => {
     .expect(400);
 });
 
+test('POST /api/v1/bookings seatId vượt phạm vi INT -> 400', async () => {
+  await request(app)
+    .post('/api/v1/bookings')
+    .set('Authorization', `Bearer ${userToken}`)
+    .send({ seatId: 3000000000 })
+    .expect(400);
+});
+
+test('POST /api/v1/bookings body JSON hỏng cú pháp -> 400', async () => {
+  await request(app)
+    .post('/api/v1/bookings')
+    .set('Authorization', `Bearer ${userToken}`)
+    .set('Content-Type', 'application/json')
+    .send('{"seatId":')
+    .expect(400);
+});
+
+test('GET /health có security header của helmet', async () => {
+  const res = await request(app).get('/health').expect(200);
+  expect(res.headers['x-content-type-options']).toBe('nosniff');
+});
+
 test('POST /api/v1/bookings ghế không tồn tại -> 404', async () => {
   await request(app)
     .post('/api/v1/bookings')
@@ -110,6 +132,10 @@ test('POST /api/v1/bookings ghế đã có người -> 409', async () => {
     .send({ seatId: seatIds[1] })
     .expect(409);
   expect(res.body.error).toBeDefined();
+});
+
+test('GET /api/v1/metrics không có token -> 401', async () => {
+  await request(app).get('/api/v1/metrics').expect(401);
 });
 
 test('GET /api/v1/metrics với role user -> 403', async () => {
